@@ -1,0 +1,35 @@
+- hosts: centos
+  tasks: 
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Install Apache
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Start and Enable Apache
+    systemd:
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: Download Template
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page292/grandcoffee.zip
+      dest: /tmp/grandcoffee.zip
+
+  - name: Install Unzip
+    yum:
+      name: unzip
+      state: latest
+
+  - name: Extract Template
+    unarchive:
+      src: /tmp/grandcoffee.zip
+      dest: /tmp/
+      remote_src: yes
+
+  - name: Move Template file to /var/www/html
+    shell: "mv /tmp/html/* /var/www/html/"
